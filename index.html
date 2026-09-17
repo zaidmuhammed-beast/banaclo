@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>BANACLO — The Everywhere Hoodie</title>
+<meta name="description" content="A funky, fully procedural 3D hoodie configurator built with Three.js. Spin it, dye it, tie-dye it, print on it." />
+<meta name="theme-color" content="#05030f" />
+<meta property="og:title" content="BANACLO — The Everywhere Hoodie" />
+<meta property="og:description" content="Procedural 3D hoodie configurator. No mesh files, all maths." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%A7%A5</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <canvas id="scene" aria-label="Interactive 3D hoodie. Drag to rotate, scroll to zoom."></canvas>
+  <div id="grain" aria-hidden="true"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <!-- boot screen -->
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-logo">BANACLO</div>
+      <div class="loader-track"><div id="loader-bar"></div></div>
+      <div id="loader-note">waking up</div>
+    </div>
+  </div>
+
+  <div id="nowebgl" hidden>
+    <h2>NO WEBGL, NO HOODIE</h2>
+    <p>This browser can't start WebGL. Try a recent Chrome, Firefox, Safari or Edge with hardware acceleration switched on.</p>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="#" id="brand">BANACLO<i></i></a>
+    <div class="topbar-right">
+      <span class="pill" id="fps-pill"><b id="fps">60</b> FPS</span>
+      <span class="pill hide-sm">DROP 001</span>
+      <button class="pill pill--btn" id="help-btn" type="button">KEYS</button>
+    </div>
+  </header>
+
+  <main class="hud">
+    <section class="panel panel--left">
+      <p class="eyebrow">DROP 001 · 100% PROCEDURAL</p>
+      <h1 class="title">THE<br /><em>EVERYWHERE</em><br />HOODIE</h1>
+      <p class="blurb">
+        480&nbsp;GSM brushed-back knit, boxed shoulders, kangaroo pocket, hood big enough
+        to disappear into. Modelled entirely in maths — no mesh was harmed.
+      </p>
+      <div class="price-row">
+        <span class="price" id="price">$128</span>
+        <span class="price-note" id="price-note">incl. dye job</span>
+      </div>
+      <div class="field">
+        <label>SIZE</label>
+        <div class="chips" id="sizes"></div>
+      </div>
+      <button class="btn btn--primary" id="add-to-cart" type="button">
+        <span>ADD TO CART</span><i>→</i>
+      </button>
+      <ul class="facts">
+        <li><b>88K</b> triangles, zero downloads</li>
+        <li><b>8</b> print patterns, infinite colours</li>
+        <li><b>1</b> hood that actually flops</li>
+      </ul>
+    </section>
+
+    <section class="panel panel--right" id="customiser">
+      <div class="panel-head">
+        <h2>CUSTOMISER</h2>
+        <button class="mini" id="panel-toggle" type="button" aria-expanded="true">HIDE</button>
+      </div>
+      <div class="panel-body" id="panel-body">
+        <div class="field">
+          <label>COLOURWAY</label>
+          <div class="swatches" id="colorways"></div>
+        </div>
+
+        <div class="field field--split">
+          <div>
+            <label for="color-base">BASE</label>
+            <input type="color" id="color-base" value="#ff2e88" />
+          </div>
+          <div>
+            <label for="color-accent">ACCENT</label>
+            <input type="color" id="color-accent" value="#14f195" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>PATTERN</label>
+          <div class="chips" id="patterns"></div>
+        </div>
+
+        <div class="field">
+          <label for="s-scale">PATTERN SCALE <b id="v-scale">1.0</b></label>
+          <input type="range" id="s-scale" min="0.3" max="3" step="0.05" value="1" />
+        </div>
+        <div class="field">
+          <label for="s-fuzz">FUZZ <b id="v-fuzz">0.75</b></label>
+          <input type="range" id="s-fuzz" min="0" max="1.5" step="0.01" value="0.75" />
+        </div>
+        <div class="field">
+          <label for="s-weird">WEIRDNESS <b id="v-weird">0.50</b></label>
+          <input type="range" id="s-weird" min="0" max="1" step="0.01" value="0.5" />
+        </div>
+        <div class="field">
+          <label for="s-bloom">GLOW <b id="v-bloom">0.34</b></label>
+          <input type="range" id="s-bloom" min="0" max="1.6" step="0.01" value="0.34" />
+        </div>
+
+        <div class="field">
+          <label>PRINT</label>
+          <input type="text" id="print-text" maxlength="12" value="BANACLO" placeholder="TOP LINE" />
+          <input type="text" id="print-sub" maxlength="20" value="WEAR THE GLITCH" placeholder="BOTTOM LINE" />
+        </div>
+
+        <div class="toggles" id="toggles"></div>
+
+        <div class="actions">
+          <button class="btn btn--ghost" id="randomize" type="button">GO FERAL</button>
+          <button class="btn btn--ghost" id="snap" type="button">SNAPSHOT</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="viewbar" id="viewbar" aria-label="Camera views"></nav>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marquee-track"></div>
+  </div>
+
+  <div id="toast" role="status"></div>
+
+  <div id="keysheet" hidden>
+    <div class="keysheet-card">
+      <h3>SHORTCUTS</h3>
+      <ul>
+        <li><kbd>drag</kbd> spin the garment</li>
+        <li><kbd>scroll</kbd> zoom</li>
+        <li><kbd>H</kbd> hood up / down</li>
+        <li><kbd>R</kbd> go feral</li>
+        <li><kbd>X</kbd> x-ray wireframe</li>
+        <li><kbd>space</kbd> auto-spin</li>
+        <li><kbd>1…5</kbd> camera views</li>
+        <li><kbd>S</kbd> snapshot png</li>
+      </ul>
+      <button class="btn btn--ghost" id="keysheet-close" type="button">GOT IT</button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

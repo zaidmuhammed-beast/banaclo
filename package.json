@@ -1,0 +1,27 @@
+{
+  "name": "banaclo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "BANACLO — a funky 3D hoodie configurator built with Three.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173"
+  },
+  "keywords": [
+    "threejs",
+    "webgl",
+    "3d",
+    "hoodie",
+    "configurator",
+    "ecommerce"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "three": "0.186.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.6"
+  }
+}
