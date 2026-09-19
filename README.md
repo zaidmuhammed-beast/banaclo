@@ -1,6 +1,11 @@
 # BANACLO — The Everywhere Hoodie
 
-A funky, fully interactive 3D hoodie configurator built with [Three.js](https://threejs.org/).
+A funky, scroll-driven lookbook and 3D hoodie configurator built with [Three.js](https://threejs.org/).
+
+The page opens on five models standing in a row. Scrolling dollies the camera into
+each one in turn — the others drop away as you go in, and scrolling back up rewinds
+to the full line-up. Past the line-up sits the configurator, where the hoodie itself
+is real 3D.
 
 Every stitch of the garment is **generated procedurally in the browser** — there is no
 `.glb`, no `.obj`, no texture download. The torso, shoulders, sleeves, hood, kangaroo
@@ -8,9 +13,45 @@ pocket, ribbed cuffs, waistband, drawstrings and aglets are all lofted from prof
 curves and roughed up with fractal noise at load time (~88k triangles, built in
 about 200 ms).
 
-![The Everywhere Hoodie](docs/hero.jpg)
+![The line-up](docs/lookbook.jpg)
+
+![One look, zoomed](docs/look.jpg)
+
+![The configurator](docs/hero.jpg)
 
 ![pattern shaders](docs/patterns.jpg)
+
+## The hero
+
+`src/hero/` is plain DOM — no WebGL — so the page is interactive before the 3D
+engine has finished starting.
+
+The five figures live in one flex row, and the entire row is a single transformed
+element. "Zooming into a model" is therefore one `scale` + `translate` that puts that
+model's centre at the centre of the frame, with `transform-origin: 0 0` and the
+translation solved explicitly (`t = viewportCentre − focus × scale`) rather than left
+to layout — a flex row wider than the viewport does not stay centred by CSS alone.
+
+Scroll position maps onto a keyframe track of one screen per stage:
+
+| progress | frame |
+|---|---|
+| `0.0` | all five, wide |
+| `0.2` | look 01 fills the screen |
+| `0.4` … `1.0` | looks 02 – 05 |
+
+Everything on screen — scale, pan, per-figure opacity, caption, dots, backdrop tint —
+is a pure function of that one number, so nothing is latched and scrolling back up
+rewinds exactly. Between two close-ups the scale dips slightly, the way a camera
+operator pulls back before swinging across.
+
+### Swapping in real photography
+
+The figures are placeholders drawn from a stick skeleton in `figures.js` (tapered limb
+paths, five poses, parametric colourway). To replace them with real shots, drop files
+into `public/models/` named `01.jpg` … `05.jpg` — each one fades in over its drawing on
+load, and a missing file just leaves the drawing in place. No code change; edit
+`src/hero/models.js` if you want different names, captions or colourways.
 
 ## Run it
 
@@ -39,6 +80,10 @@ The build is a static bundle: drop `dist/` on any host. It needs to be *served*
 | **Fuzz / weirdness / glow** | sheen and knit contrast, chromatic aberration and grain, bloom strength |
 | **X-ray** | wireframe the whole garment |
 | **Snapshot** | downloads a PNG of the current configuration |
+
+The wheel belongs to the page, so the canvas does not zoom on scroll — use the camera
+view buttons (or `1`–`5`) to get closer. On touch, vertical swipes scroll the page and
+horizontal drags spin the garment (`touch-action: pan-y`).
 
 ### Keyboard
 
@@ -91,6 +136,10 @@ src/
     stage.js            backdrop, floor, neon tubes, dust, text ring, lights
     post.js             bloom + chromatic aberration / grain / glitch pass
     textures.js         canvas-generated print, ring text, radial fade
+  hero/
+    hero.js             scroll -> keyframe track, the zoom itself
+    figures.js          parametric SVG lookbook figures
+    models.js           the five looks (and photo slots)
   ui/
     ui.js               control wiring
     presets.js          colourways, patterns, sizes, pricing
@@ -115,6 +164,10 @@ BANACLO.flyTo({ pos: [1.2, 0.3, 0.6], target: [0, 0, 0] });  // or an inline one
   world positions fights `OrbitControls`, which re-derives its spherical state from the
   camera every frame and clamps the radius — a straight-line path near the target gets
   snapped to `minDistance`.
+- The hero's easing is frame-rate independent (`1 - 0.0015^dt`), and faded-out figures
+  are set to `visibility: hidden` rather than just `opacity: 0`, so the browser stops
+  compositing five full-height SVG layers every frame.
+- The WebGL loop does not run while the hero owns the screen.
 - The shopping flow (price, sizes, add to cart) is a front-end demo. Nothing is sent
   anywhere and there is no backend.
 - Requires WebGL 2. Without it the page shows a fallback message instead of failing silently.

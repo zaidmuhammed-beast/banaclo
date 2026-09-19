@@ -12,7 +12,9 @@ export function mountUI(app) {
 
   /* ----------------------------- helpers ----------------------------- */
   let toastTimer;
+  let silent = true;                 // no announcements during boot
   function toast(msg) {
+    if (silent) return;
     const el = $('toast');
     el.textContent = msg;
     el.classList.add('is-on');
@@ -260,8 +262,18 @@ export function mountUI(app) {
 
   /* ------------------------------ init -------------------------------- */
   applyColorway(COLORWAYS[0]);
+  silent = false;
   syncPatternChips();
   syncToggles();
   updatePrice();
-  setTimeout(() => toast('drag to spin · press KEYS for shortcuts'), 1200);
+  // Only greet once the studio is actually on screen.
+  const studio = document.getElementById('studio');
+  if (studio) {
+    const greet = new IntersectionObserver((e) => {
+      if (!e[0].isIntersecting) return;
+      greet.disconnect();
+      toast('drag to spin · press KEYS for shortcuts');
+    }, { threshold: 0.4 });
+    greet.observe(studio);
+  }
 }

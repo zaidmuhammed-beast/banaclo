@@ -32,6 +32,7 @@
     <p>This browser can't start WebGL. Try a recent Chrome, Firefox, Safari or Edge with hardware acceleration switched on.</p>
   </div>
 
+
   <header class="topbar">
     <a class="brand" href="#" id="brand">BANACLO<i></i></a>
     <div class="topbar-right">
@@ -41,13 +42,40 @@
     </div>
   </header>
 
+  <!-- ------------------------------ hero ------------------------------ -->
+  <section id="hero">
+    <div class="hero-stage">
+      <div class="hero-rowwrap">
+        <div class="hero-row" id="hero-row"></div>
+      </div>
+
+      <div class="hero-lead" id="hero-lead">
+        <p class="eyebrow">DROP 001 &middot; FIVE LOOKS</p>
+        <h1 class="title">THE<br /><em>EVERYWHERE</em><br />HOODIE</h1>
+        <p class="blurb">
+          480&nbsp;GSM brushed-back knit, boxed shoulders, kangaroo pocket, hood
+          big enough to disappear into. Keep scrolling to meet the line-up.
+        </p>
+      </div>
+
+      <div class="hero-caption" id="hero-caption"></div>
+      <nav class="hero-dots" id="hero-dots" aria-label="Looks"></nav>
+      <div class="hero-cue" id="hero-cue"><span>SCROLL</span><i></i></div>
+    </div>
+  </section>
+
+  <!-- ----------------------------- studio ----------------------------- -->
+  <section id="studio">
+    <p class="studio-eyebrow">NOW BUILD YOUR OWN</p>
+
+
   <main class="hud">
     <section class="panel panel--left">
-      <p class="eyebrow">DROP 001 · 100% PROCEDURAL</p>
-      <h1 class="title">THE<br /><em>EVERYWHERE</em><br />HOODIE</h1>
+      <p class="eyebrow">100% PROCEDURAL &middot; NO MESH FILES</p>
+      <h2 class="title title--studio">BUILD<br /><em>YOURS</em></h2>
       <p class="blurb">
-        480&nbsp;GSM brushed-back knit, boxed shoulders, kangaroo pocket, hood big enough
-        to disappear into. Modelled entirely in maths — no mesh was harmed.
+        Every panel of this one is generated in the browser. Drag to spin it,
+        dye it, print on it, then take it home.
       </p>
       <div class="price-row">
         <span class="price" id="price">$128</span>
@@ -127,7 +155,9 @@
     </section>
   </main>
 
-  <nav class="viewbar" id="viewbar" aria-label="Camera views"></nav>
+    <nav class="viewbar" id="viewbar" aria-label="Camera views"></nav>
+    <p class="studio-warming" id="studio-warming">warming up the loom&hellip;</p>
+  </section>
 
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track" id="marquee-track"></div>

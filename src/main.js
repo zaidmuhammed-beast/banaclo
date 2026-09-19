@@ -8,6 +8,7 @@ import { createComposer } from './scene/post.js';
 import { setFabricUniform, tickFabrics, fabricMaterials, PATTERNS } from './scene/materials.js';
 import { makePrintTexture } from './scene/textures.js';
 import { mountUI } from './ui/ui.js';
+import { mountHero } from './hero/hero.js';
 import './styles.css';
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -24,15 +25,28 @@ function frame() {
   return new Promise((r) => requestAnimationFrame(() => r()));
 }
 
+/** Reveals the studio's canvas + HUD only while that section is on screen. */
+function watchStudio(onEnter) {
+  const studio = document.getElementById('studio');
+  if (!studio) return;
+  new IntersectionObserver((entries) => {
+    const on = entries[0].isIntersecting;
+    document.body.classList.toggle('studio-active', on);
+    if (on) onEnter();
+  }, { threshold: 0.15 }).observe(studio);
+}
+
 async function boot() {
   const canvas = document.getElementById('scene');
   const loader = document.getElementById('loader');
   const bar = document.getElementById('loader-bar');
   const loaderNote = document.getElementById('loader-note');
 
+  const warming = document.getElementById('studio-warming');
   const step = async (pct, note) => {
-    bar.style.width = `${pct}%`;
-    loaderNote.textContent = note;
+    if (bar) bar.style.width = `${pct}%`;
+    if (loaderNote) loaderNote.textContent = note;
+    if (warming) warming.textContent = `${note}\u2026`;
     await frame();
     await frame();
   };
@@ -76,6 +90,9 @@ async function boot() {
   controls.target.set(0, 0.02, 0);
   controls.autoRotateSpeed = 1.1;
   controls.enablePan = false;
+  // The page owns the wheel and vertical swipes; the canvas only gets drags.
+  controls.enableZoom = false;
+  canvas.style.touchAction = 'pan-y';
 
   await step(26, 'pouring the void');
   const stage = createStage(scene);
@@ -303,8 +320,15 @@ async function boot() {
   let fpsAccum = 0, fpsFrames = 0, frameMark = last;
   const fpsEl = document.getElementById('fps');
 
+  let studioVisible = false;
+  watchStudio(() => { studioVisible = true; });
+  new IntersectionObserver((e) => { studioVisible = e[0].isIntersecting; }, { rootMargin: '25% 0px' })
+    .observe(document.getElementById('studio'));
+
   function animate() {
     requestAnimationFrame(animate);
+    // Nothing to draw while the hero owns the screen — don't burn the battery.
+    if (!studioVisible) { last = performance.now() / 1000; frameMark = last; return; }
     const now = performance.now() / 1000;
     const dt = Math.min(now - last, 0.05);
     last = now;
@@ -350,15 +374,18 @@ async function boot() {
   // Handy in the console: BANACLO.flyTo('back'), BANACLO.setPattern('holo'), ...
   window.BANACLO = app;
 
-  loader.classList.add('is-gone');
-  setTimeout(() => { loader.hidden = true; }, 900);
-  document.body.classList.add('is-live');
+  document.body.classList.add('studio-ready');
 }
+
+// Hero first: it is ordinary DOM, so the page is usable before WebGL exists.
+mountHero();
+document.body.classList.add('is-live');
+const bootLoader = document.getElementById('loader');
+bootLoader.classList.add('is-gone');
+setTimeout(() => { bootLoader.hidden = true; }, 900);
 
 boot().catch((err) => {
   console.error(err);
-  const loader = document.getElementById('loader');
-  if (loader) {
-    document.getElementById('loader-note').textContent = 'something snapped: ' + err.message;
-  }
+  const warming = document.getElementById('studio-warming');
+  if (warming) warming.textContent = 'the 3D studio failed to start: ' + err.message;
 });

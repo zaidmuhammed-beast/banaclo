@@ -16,14 +16,17 @@
 
 * { box-sizing: border-box; }
 
-html, body {
+/* No global smooth-scroll: it animates every programmatic jump, including
+   ones that should be instant. The dot nav opts in explicitly instead. */
+html { background: var(--void); }
+
+body {
   margin: 0;
-  height: 100%;
+  min-height: 100%;
   background: var(--void);
   color: var(--ink);
   font-family: var(--mono);
-  overflow: hidden;
-  overscroll-behavior: none;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -36,10 +39,33 @@ body.is-live { opacity: 1; }
   width: 100%;
   height: 100%;
   display: block;
-  touch-action: none;
+  z-index: 1;
+  /* vertical swipes scroll the page, horizontal ones spin the hoodie */
+  touch-action: pan-y;
   cursor: grab;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.7s ease, visibility 0s linear 0.7s;
 }
 #scene:active { cursor: grabbing; }
+
+body.studio-active #scene {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.7s ease;
+}
+
+.hud, .viewbar {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+}
+body.studio-active .hud,
+body.studio-active .viewbar {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease 0.15s;
+}
 
 /* film grain + scanline veil over everything */
 #grain {
@@ -126,6 +152,262 @@ body.is-live { opacity: 1; }
 }
 #nowebgl h2 { font-family: var(--display); color: var(--hot); }
 
+
+/* ==========================================================================
+   Hero — five looks in a row, scrolled through like a camera dolly
+   ========================================================================== */
+
+#hero {
+  position: relative;
+  height: 620vh;                /* one screen per stage, plus the wide shot */
+  z-index: 2;
+  --look: var(--hot);
+}
+
+.hero-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 80% at 50% 8%, color-mix(in srgb, var(--look) 16%, transparent) 0%, transparent 62%),
+    radial-gradient(90% 70% at 50% 108%, #180a2e 0%, transparent 70%),
+    var(--void);
+  transition: background 0.5s linear;
+}
+
+/* the floor the line-up stands on */
+.hero-stage::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 160vw;
+  height: 42vh;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.045) 55%, rgba(255,255,255,0.02) 100%);
+  pointer-events: none;
+}
+
+.hero-rowwrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Positioned at the origin and placed entirely by the transform: a flex row
+   wider than the viewport does not stay centred by layout alone. */
+.hero-row {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(30px, 6vw, 90px);
+  will-change: transform;
+  transform-origin: 0 0;
+}
+
+.model {
+  position: relative;
+  flex: none;
+  width: 260px;
+  height: 780px;
+  margin: 0;
+  will-change: opacity;
+}
+.model svg { display: block; width: 100%; height: 100%; }
+
+.model-glow {
+  position: absolute;
+  left: 50%;
+  top: 8%;
+  width: 150%;
+  height: 84%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--card) 40%, transparent), transparent 72%);
+  filter: blur(26px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.model-art { position: relative; display: block; }
+
+.model-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.model.has-photo .model-photo { opacity: 1; }
+.model.has-photo .model-art { opacity: 0; }
+
+.model-tag {
+  position: absolute;
+  left: 50%;
+  bottom: -4%;
+  transform: translateX(-50%);
+  font-size: 15px;
+  letter-spacing: 0.3em;
+  color: var(--card);
+  opacity: calc(var(--tag-opacity, 1) * 0.8);
+  white-space: nowrap;
+}
+
+/* ------------------------------ hero copy ------------------------------ */
+
+.hero-lead {
+  position: absolute;
+  top: 11vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  width: min(560px, 86vw);
+  text-align: center;
+  pointer-events: none;
+  will-change: transform, opacity;
+  text-shadow: 0 6px 40px rgba(2, 1, 8, 0.9);
+}
+.hero-lead { --lead-x: -50%; }
+.hero-lead .title { margin-bottom: 18px; }
+.hero-lead .blurb { margin: 0 auto; }
+
+.hero-caption {
+  position: absolute;
+  left: max(var(--pad), 5vw);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: min(360px, 68vw);
+  height: 260px;
+  pointer-events: none;
+}
+.hero-caption .cap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.cap-look { margin: 0 0 6px; font-size: 11px; letter-spacing: 0.3em; opacity: 0.6; }
+.cap-name {
+  margin: 0 0 10px;
+  font-family: var(--display);
+  font-size: clamp(34px, 6vw, 62px);
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+}
+.cap-way {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cap-way i {
+  width: 13px; height: 13px;
+  background: var(--c);
+  border: 1px solid var(--line);
+  display: inline-block;
+}
+.cap-note { margin: 0; font-size: 12.5px; line-height: 1.55; opacity: 0.66; max-width: 28ch; }
+
+.hero-dots {
+  position: absolute;
+  right: var(--pad);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  display: grid;
+  gap: 6px;
+}
+.dot {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  width: 42px;
+  padding: 7px 0;
+  color: var(--ink);
+  background: var(--glass);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+.dot:hover { transform: translateX(-4px); border-color: var(--look); }
+.dot.is-on { background: var(--look); color: #0a0510; font-weight: 700; border-color: var(--look); }
+
+.hero-cue {
+  position: absolute;
+  left: max(var(--pad), 5vw);
+  bottom: calc(var(--pad) + 46px);
+  z-index: 4;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.hero-cue i {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(180deg, var(--ink), transparent);
+  animation: cue 1.9s ease-in-out infinite;
+}
+@keyframes cue {
+  0%, 100% { transform: scaleY(0.4); transform-origin: top; opacity: 0.35; }
+  50%      { transform: scaleY(1);   transform-origin: top; opacity: 1; }
+}
+
+/* ------------------------------- studio -------------------------------- */
+
+#studio {
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+}
+
+.studio-eyebrow {
+  position: absolute;
+  top: calc(var(--pad) + 44px);
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  color: var(--cool);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+body.studio-active .studio-eyebrow { opacity: 0.85; }
+
+.title--studio { font-size: clamp(28px, 4.4vw, 52px); }
+
+.studio-warming {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  transition: opacity 0.4s ease;
+}
+body.studio-ready .studio-warming { opacity: 0; }
+
 /* ------------------------------- topbar --------------------------------- */
 .topbar {
   position: fixed;
@@ -169,6 +451,8 @@ body.is-live { opacity: 1; }
   white-space: nowrap;
 }
 .pill b { color: var(--cool); }
+#fps-pill { opacity: 0; transition: opacity 0.4s ease; }
+body.studio-active #fps-pill { opacity: 1; }
 .pill--btn { cursor: pointer; color: var(--ink); font-family: var(--mono); }
 .pill--btn:hover { border-color: var(--hot); color: var(--hot); }
 
@@ -577,6 +861,47 @@ kbd {
   border: 1px solid var(--line);
   background: rgba(255,255,255,0.06);
   color: var(--cool);
+}
+
+
+/* ------------------------- hero on small screens ------------------------ */
+@media (max-width: 700px) {
+  #hero { height: 560vh; }
+
+  .hero-lead { top: 9vh; width: 90vw; }
+
+  /* caption drops under the figure, with its own scrim so it stays legible */
+  .hero-caption {
+    left: 0;
+    top: auto;
+    bottom: 0;
+    transform: none;
+    width: 100%;
+    height: auto;
+  }
+  .hero-caption .cap {
+    top: auto;
+    bottom: 0;
+    width: 100vw;
+    padding: 20vh var(--pad) calc(var(--pad) + 52px);
+    background: linear-gradient(0deg, rgba(4, 2, 12, 0.96) 42%, rgba(4, 2, 12, 0) 100%);
+  }
+  .cap-name { font-size: clamp(32px, 12vw, 52px); }
+  .cap-note { max-width: none; }
+
+  /* look picker becomes a strip under the header */
+  .hero-dots {
+    top: calc(var(--pad) + 32px);
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    grid-auto-flow: column;
+  }
+  .dot { width: 34px; padding: 6px 0; }
+  .dot:hover { transform: none; }
+
+  .hero-cue { bottom: calc(var(--pad) + 40px); }
+  .model-tag { font-size: 13px; }
 }
 
 /* ----------------------------- responsive -------------------------------- */
