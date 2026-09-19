@@ -1,0 +1,25 @@
+# Netlify build config for BANACLO.
+#
+# vite.config.js sets base: './', so the bundle uses relative asset paths and
+# works unchanged on the production URL and on deploy previews.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Vite 7 requires node ^20.19 || >=22.12 — pin it rather than inherit
+  # whatever the build image defaults to.
+  NODE_VERSION = "22"
+
+# Asset filenames are content-hashed, so they can be cached indefinitely.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# The entry document must not be cached, or a deploy won't be picked up.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

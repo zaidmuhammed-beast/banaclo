@@ -68,6 +68,16 @@ npm run preview    # serve the production build
 The build is a static bundle: drop `dist/` on any host. It needs to be *served*
 (ES modules don't load over `file://`).
 
+### Deploying
+
+`netlify.toml` sets the build command (`npm run build`), the publish directory
+(`dist`) and pins Node 22, since Vite 7 needs `^20.19 || >=22.12`. Point Netlify at the
+repo and it builds the default branch with no further configuration.
+
+`vite.config.js` uses `base: './'`, so asset paths are relative and the same bundle
+works on the production URL, on deploy previews, and under a subpath — which also
+makes GitHub Pages or any static host a drop-in alternative.
+
 ## What you can do with it
 
 | | |
