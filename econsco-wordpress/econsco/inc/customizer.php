@@ -15,7 +15,7 @@ function econsco_option_defaults() {
 		'hero_text'    => __( 'ECONSCO is a modern digital firm. We plan, create and run the content marketing, advertising and websites that turn attention into customers — so you can focus on growing.', 'econsco' ),
 		'cta_title'    => __( 'Ready to grow?', 'econsco' ),
 		'cta_text'     => __( 'Tell us where you want your business to be. We will come back within one working day with ideas and a clear plan.', 'econsco' ),
-		'email'        => '',
+		'email'        => 'admin@econsco.com',
 		'phone'        => '',
 		'whatsapp'     => '',
 		'address'      => '',
