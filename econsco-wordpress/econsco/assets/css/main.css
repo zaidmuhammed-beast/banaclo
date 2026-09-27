@@ -1260,6 +1260,146 @@ figcaption {
 	text-align: center;
 }
 
+/* ---------- Locations ---------- */
+
+.location {
+	padding: 14px;
+	overflow: hidden;
+	transition: transform 0.3s, border-color 0.3s;
+}
+
+.location:hover {
+	transform: translateY(-6px);
+	border-color: rgba(182, 226, 29, 0.4);
+}
+
+.location__flag {
+	position: relative;
+	aspect-ratio: 3 / 2;
+	border-radius: var(--radius-sm);
+	overflow: hidden;
+	box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.7);
+}
+
+.location__flag .flag {
+	width: 100%;
+	height: 100%;
+}
+
+/* Glass sheen across the flag. */
+.location__flag::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(120deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.05) 38%, transparent 55%, rgba(11, 34, 56, 0.25) 100%);
+	border: 1px solid rgba(255, 255, 255, 0.25);
+	border-radius: inherit;
+}
+
+.location__body {
+	padding: 22px 12px 10px;
+}
+
+.location__city {
+	font-family: var(--font-display);
+	font-size: clamp(34px, 3.4vw, 44px);
+	line-height: 1;
+	margin-bottom: 10px;
+}
+
+.location__country {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--muted);
+	margin-bottom: 18px;
+}
+
+.location__country .icon {
+	width: 18px;
+	height: 18px;
+	color: var(--lime);
+}
+
+.location__time {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+	padding: 6px 14px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.06);
+	border: 1px solid var(--glass-border);
+	font-size: 14px;
+}
+
+.location__time time {
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+
+.location__time span:last-child {
+	color: var(--muted);
+}
+
+.location__dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--lime);
+	box-shadow: 0 0 0 4px rgba(182, 226, 29, 0.18);
+}
+
+.location__time time:empty + span {
+	display: none;
+}
+
+.location__time:has(time:empty) {
+	display: none;
+}
+
+.info-card.info-card--offices {
+	display: block;
+}
+
+.office-list {
+	list-style: none;
+	margin: 12px 0 0;
+	padding: 0;
+	display: grid;
+	gap: 12px;
+}
+
+.office-list li {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.office-list__flag {
+	flex-shrink: 0;
+	width: 36px;
+	height: 24px;
+	border-radius: 5px;
+	overflow: hidden;
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.office-list__flag .flag {
+	width: 100%;
+	height: 100%;
+}
+
+.office-list__name {
+	flex: 1;
+}
+
+.office-list time {
+	color: var(--muted);
+	font-size: 14px;
+	font-variant-numeric: tabular-nums;
+}
+
 /* ---------- CTA ---------- */
 
 .cta {

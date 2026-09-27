@@ -41,7 +41,7 @@ function econsco_services() {
 			'id'      => 'advertising',
 			'icon'    => 'target',
 			'title'   => __( 'Advertising', 'econsco' ),
-			'summary' => __( 'Paid campaigns that reach the right people at the right moment, with every rupee, dollar and dirham tracked back to results.', 'econsco' ),
+			'summary' => __( 'Paid campaigns that reach the right people at the right moment, with every euro, pound and rupiah tracked back to results.', 'econsco' ),
 			'points'  => array(
 				__( 'Google Search, Display and YouTube Ads', 'econsco' ),
 				__( 'Meta (Facebook & Instagram) and TikTok Ads', 'econsco' ),
@@ -109,5 +109,16 @@ function econsco_example_work() {
 		array( 'tag' => __( 'Website + Ads', 'econsco' ), 'title' => __( 'E-commerce launch', 'econsco' ), 'text' => __( 'A WooCommerce store paired with Meta and Google Shopping campaigns to drive first sales.', 'econsco' ) ),
 		array( 'tag' => __( 'Content', 'econsco' ), 'title' => __( 'B2B content engine', 'econsco' ), 'text' => __( 'An SEO blog and LinkedIn content programme that generates inbound leads every month.', 'econsco' ) ),
 		array( 'tag' => __( 'Ads', 'econsco' ), 'title' => __( 'Local lead generation', 'econsco' ), 'text' => __( 'Search and social campaigns with landing pages built to turn clicks into booked calls.', 'econsco' ) ),
+	);
+}
+
+/**
+ * Offices shown in the "Where we operate" section, footer and contact page.
+ */
+function econsco_locations() {
+	return array(
+		array( 'flag' => 'es', 'city' => __( 'Jaén', 'econsco' ), 'country' => __( 'Spain', 'econsco' ), 'tz' => 'Europe/Madrid' ),
+		array( 'flag' => 'id', 'city' => __( 'Jakarta', 'econsco' ), 'country' => __( 'Indonesia', 'econsco' ), 'tz' => 'Asia/Jakarta' ),
+		array( 'flag' => 'gb', 'city' => __( 'Belfast', 'econsco' ), 'country' => __( 'United Kingdom', 'econsco' ), 'tz' => 'Europe/London' ),
 	);
 }

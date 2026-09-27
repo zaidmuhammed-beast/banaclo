@@ -20,6 +20,18 @@ econsco_page_hero(
 		</div>
 
 		<aside class="contact__info">
+			<div class="info-card info-card--offices glass">
+				<h2 class="info-card__title"><?php esc_html_e( 'Our offices', 'econsco' ); ?></h2>
+				<ul class="office-list">
+					<?php foreach ( econsco_locations() as $location ) : ?>
+						<li>
+							<span class="office-list__flag"><?php echo econsco_flag( $location['flag'] ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+							<span class="office-list__name"><?php echo esc_html( $location['city'] . ', ' . $location['country'] ); ?></span>
+							<time data-tz="<?php echo esc_attr( $location['tz'] ); ?>"></time>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
 			<div class="info-card glass">
 				<span class="icon-badge"><?php echo econsco_icon( 'mail' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
 				<div>

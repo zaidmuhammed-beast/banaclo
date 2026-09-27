@@ -35,3 +35,47 @@ function econsco_icon( $name ) {
 	}
 	return '<svg class="icon icon-' . esc_attr( $name ) . '" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $paths[ $name ] . '</svg>';
 }
+
+/**
+ * Flag artwork (3:2) for the locations section.
+ */
+function econsco_flag( $code ) {
+	static $n = 0;
+	$n++;
+	switch ( $code ) {
+		case 'es':
+			$body = '<rect width="60" height="40" fill="#c60b1e"/><rect y="10" width="60" height="20" fill="#ffc400"/>'
+				// Simplified coat of arms: pillars, crowned quartered shield.
+				. '<g stroke="#8a6d0b" stroke-width=".25">'
+				. '<rect x="12.2" y="14.5" width="1.8" height="12" fill="#e8e8e8"/><rect x="25" y="14.5" width="1.8" height="12" fill="#e8e8e8"/>'
+				. '<rect x="11.6" y="13.4" width="3" height="1.2" fill="#c8a415"/><rect x="24.4" y="13.4" width="3" height="1.2" fill="#c8a415"/>'
+				. '<rect x="11.6" y="26.4" width="3" height="1.2" fill="#c8a415"/><rect x="24.4" y="26.4" width="3" height="1.2" fill="#c8a415"/>'
+				. '<path d="M11 19.5h4.4v1.4H11zM23.6 19.5H28v1.4h-4.4z" fill="#c60b1e"/>'
+				. '<path d="M15.5 12.2l1-2 1.5 1.2 1.5-1.8 1.5 1.8 1.5-1.2 1 2z" fill="#c8a415"/>'
+				. '<path d="M15.6 12.8h7.8v1.2h-7.8z" fill="#c8a415"/>'
+				. '<path d="M15.6 14.2h7.8v6.8a3.9 3.9 0 0 1-7.8 0Z" fill="#fff"/>'
+				. '<path d="M15.6 14.2h3.9v3.6h-3.9Z" fill="#c60b1e"/>'
+				. '<path d="M15.6 17.8h3.9v6.9a3.9 3.9 0 0 1-3.9-3.7Z" fill="#ffc400"/>'
+				. '<path d="M19.5 17.8h3.9V21a3.9 3.9 0 0 1-3.9 3.9Z" fill="#c60b1e"/>'
+				. '</g>'
+				. '<path d="M16.4 18.4v5.4M17.4 18.4v6M18.4 18.4v6.2" stroke="#c60b1e" stroke-width=".5"/>'
+				. '<path d="M16.5 16.9v-1.6h.6v.5h.5v-.5h.6v.5h.5v-.5h.6v1.6z" fill="#ffc400"/>'
+				. '<circle cx="21.45" cy="16" r="1" fill="#c60b1e" opacity=".6"/>';
+			break;
+		case 'id':
+			$body = '<rect width="60" height="40" fill="#fff"/><rect width="60" height="20" fill="#ce1126"/>';
+			break;
+		case 'gb':
+			$clip = 'ec-gb-' . $n;
+			$body = '<defs><clipPath id="' . $clip . '"><path d="M30 20h30v20zv20H0zH0V0zV0h30z"/></clipPath></defs>'
+				. '<rect width="60" height="40" fill="#012169"/>'
+				. '<path d="M0 0l60 40M60 0L0 40" stroke="#fff" stroke-width="8"/>'
+				. '<path d="M0 0l60 40M60 0L0 40" stroke="#c8102e" stroke-width="4" clip-path="url(#' . $clip . ')"/>'
+				. '<path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="12"/>'
+				. '<path d="M30 0v40M0 20h60" stroke="#c8102e" stroke-width="7"/>';
+			break;
+		default:
+			return '';
+	}
+	return '<svg class="flag" viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">' . $body . '</svg>';
+}

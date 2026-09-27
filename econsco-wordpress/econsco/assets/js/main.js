@@ -19,6 +19,21 @@
 		});
 	}
 
+	// Live local time for each office.
+	var clocks = document.querySelectorAll('time[data-tz]');
+	function tick() {
+		var now = new Date();
+		clocks.forEach(function (el) {
+			try {
+				el.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: el.getAttribute('data-tz') });
+			} catch (e) {}
+		});
+	}
+	if (clocks.length) {
+		tick();
+		setInterval(tick, 30000);
+	}
+
 	var items = document.querySelectorAll('.reveal');
 	if (!('IntersectionObserver' in window)) {
 		items.forEach(function (el) { el.classList.add('is-visible'); });

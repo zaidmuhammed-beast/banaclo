@@ -14,6 +14,10 @@ lime (`#b6e21d`) colours.
   page and Insights as the blog, builds the main menu, adds a "Case Studies" category and
   switches permalinks to `/%postname%/`. Pages, menus and settings you already have are
   left alone.
+- **Where we operate:** the Home, About and Contact pages and the footer highlight the
+  offices in Jaén (Spain), Jakarta (Indonesia) and Belfast (United Kingdom). Each has a flag
+  and its live local time. To change the offices, edit `econsco_locations()` in
+  `econsco/inc/content.php`.
 - **Contact form:** built in, with no plugin needed. Messages are emailed to the address in
   the Customizer (or the admin email if that's blank). It has spam protection (a nonce plus
   a hidden honeypot field).

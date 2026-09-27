@@ -61,6 +61,7 @@ $econsco_socials = array_filter(
 					<?php if ( econsco_opt( 'phone' ) ) : ?>
 						<li><?php echo econsco_icon( 'phone' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><a href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', econsco_opt( 'phone' ) ) ); ?>"><?php echo esc_html( econsco_opt( 'phone' ) ); ?></a></li>
 					<?php endif; ?>
+					<li><?php echo econsco_icon( 'pin' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><a href="<?php echo esc_url( home_url( '/#locations' ) ); ?>"><?php echo esc_html( implode( ' · ', wp_list_pluck( econsco_locations(), 'city' ) ) ); ?></a></li>
 					<?php if ( econsco_opt( 'address' ) ) : ?>
 						<li><?php echo econsco_icon( 'pin' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span><?php echo nl2br( esc_html( econsco_opt( 'address' ) ) ); ?></span></li>
 					<?php endif; ?>

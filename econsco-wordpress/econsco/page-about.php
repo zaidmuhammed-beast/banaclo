@@ -64,6 +64,7 @@ econsco_page_hero(
 </section>
 
 <?php
+get_template_part( 'template-parts/locations' );
 econsco_page_editor_content();
 get_template_part( 'template-parts/cta' );
 get_footer();
