@@ -97,6 +97,20 @@ function econsco_page_url( $slug ) {
 	return $page ? get_permalink( $page ) : home_url( '/' . $slug . '/' );
 }
 
+/**
+ * Browser-tab and home-screen icons, used until a Site Icon is set in the Customizer.
+ */
+function econsco_fallback_icons() {
+	if ( has_site_icon() ) {
+		return;
+	}
+	$dir = get_template_directory_uri() . '/assets/img/';
+	printf( '<link rel="icon" href="%s" type="image/svg+xml">' . "\n", esc_url( $dir . 'mark.svg' ) );
+	printf( '<link rel="icon" href="%s" sizes="32x32">' . "\n", esc_url( $dir . 'icon-32.png' ) );
+	printf( '<link rel="apple-touch-icon" href="%s">' . "\n", esc_url( $dir . 'icon-180.png' ) );
+}
+add_action( 'wp_head', 'econsco_fallback_icons' );
+
 function econsco_excerpt_length() {
 	return 24;
 }

@@ -329,20 +329,15 @@ h4 {
 	color: var(--text);
 }
 
-.brand__mark {
-	width: 34px;
-	height: 34px;
-}
-
-.brand__name {
-	font: 700 26px/1 var(--font-brand);
-	letter-spacing: 0.02em;
-	text-transform: uppercase;
-}
-
+.brand__logo,
 .brand .custom-logo {
-	max-height: 44px;
+	height: 40px;
 	width: auto;
+	max-width: 100%;
+}
+
+.site-footer .brand__logo {
+	height: 44px;
 }
 
 .site-nav {

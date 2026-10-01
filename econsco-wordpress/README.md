@@ -23,7 +23,10 @@ lime (`#b6e21d`) colours.
   a hidden honeypot field).
 - **Customizer:** go to *Appearance → Customize → ECONSCO* to edit the hero and
   call-to-action text, email, phone, WhatsApp (adds a floating chat button), address,
-  opening hours and social links. Upload a logo under *Site Identity*.
+  opening hours and social links.
+- **Logo:** the ECONSCO logo is built in, with a white-wordmark version for the dark
+  background (`econsco/assets/img/`), and the lime mark is used as the browser-tab icon.
+  To use a different logo, upload it under *Appearance → Customize → Site Identity*.
 - **Work page:** until you publish posts in the **Case Studies** category, it shows three
   cards clearly labelled "Example engagement". Once real case studies exist, they replace
   the examples.
