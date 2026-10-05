@@ -15,6 +15,7 @@ require get_template_directory() . '/inc/content.php';
 require get_template_directory() . '/inc/icons.php';
 require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/contact-form.php';
+require get_template_directory() . '/inc/enquiries.php';
 require get_template_directory() . '/inc/setup-content.php';
 
 function econsco_setup() {

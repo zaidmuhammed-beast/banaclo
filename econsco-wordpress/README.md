@@ -18,9 +18,11 @@ lime (`#b6e21d`) colours.
   offices in Jaén (Spain), Jakarta (Indonesia) and Belfast (United Kingdom). Each has a flag
   and its live local time. To change the offices, edit `econsco_locations()` in
   `econsco/inc/content.php`.
-- **Contact form:** built in, with no plugin needed. Messages are emailed to the address in
-  the Customizer (or the admin email if that's blank). It has spam protection (a nonce plus
-  a hidden honeypot field).
+- **Contact form:** built in, with no plugin needed. Every message is saved under
+  *WP Admin → Enquiries* and emailed to the address in the Customizer, so a lead is kept even
+  if the email fails. Each enquiry shows whether its email was sent. Spam is held back by a
+  hidden honeypot field, a rate limit (5 messages per visitor per 10 minutes) and a
+  link-count check. There's no expiring nonce, so it works behind Hostinger's page cache.
 - **Customizer:** go to *Appearance → Customize → ECONSCO* to edit the hero and
   call-to-action text, email, phone, WhatsApp (adds a floating chat button), address,
   opening hours and social links.
@@ -39,9 +41,10 @@ lime (`#b6e21d`) colours.
 3. In WP Admin, go to **Appearance → Themes → Add New Theme → Upload Theme**, choose
    `econsco.zip`, then click **Install Now** and **Activate**.
 4. Go to **Appearance → Customize → ECONSCO** and fill in your contact details.
-5. **Email delivery:** Hostinger can send mail through PHP, but for reliable delivery create a
-   mailbox (for example `hello@yourdomain`) in hPanel and install an SMTP plugin such as
-   *WP Mail SMTP* pointing to it.
+5. **Email delivery:** create the mailbox `admin@econsco.com` (hPanel → Emails), install
+   the *WP Mail SMTP* plugin and choose *Other SMTP*, using host `smtp.hostinger.com`, port `465`,
+   encryption SSL, the mailbox address as username and its password. Set the "From Email" to
+   the same address, then send the plugin's test email.
 
 ## Editing copy
 
